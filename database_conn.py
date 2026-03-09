@@ -24,33 +24,3 @@ class Database:
             self.cursor.close()
         if self.connection:
             self.connection.close()
-
-
-if __name__ == "__main__":
-    # Этот код выполнится только при прямом запуске файла
-    print("Тестирование класса Database")
-
-    try:
-        # Создание экземпляра класса
-        db = Database(
-            dbname="postgres",
-            user="postgres",
-            password="root",
-            host="localhost",
-            port="5432",
-        )
-        print("✓ Подключение к БД успешно")
-
-        # # Тестовый запрос
-        # db.execute("SELECT version();")
-        # version = db.fetchall()
-        # print(f"✓ Версия PostgreSQL: {version[0][0]}")
-
-        db.close()
-        print("✓ Соединение закрыто")
-
-    except Exception as e:
-        print(f"✗ Ошибка: {e}")
-#
-#
-#
