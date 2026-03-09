@@ -3,6 +3,7 @@ from loader import DataLoader
 from query import QueryExecutor
 import json
 import argparse
+import xml.etree.ElementTree as ET
 
 
 def main():
@@ -41,29 +42,27 @@ def main():
 
     if args.format_output == "json":
         with open("output.json", "w") as f:
-            json.dump(
-                data, f, indent=4
-            )  # Записываем в файл output.json в директорию проекта
+            json.dump(data, f, indent=4)
         print("Данные успешно сохранены в файле output.json")
 
     elif args.format_output == "xml":
-        with open("output.xml", "w") as f:
-            f.write("<laba><task_1>\n<get_room_student_counts>\n")
-            f.write(str(result1))
-            f.write("\n</get_room_student_counts>\n</task_1>")
+        root = ET.Element("Root")
 
-            f.write("<task_2>\n<get_rooms_smallest_avg_age>\n")
-            f.write(str(result2))
-            f.write("\n</get_rooms_smallest_avg_age>\n</task_2>")
+        def add_data_to_xml(data, parent, tag):
+            group = ET.SubElement(parent, tag)
+            for item in data:
+                entry = ET.SubElement(group, "Entry")
+                for element in item:
+                    item_elem = ET.SubElement(entry, "Item")
+                    item_elem.text = str(element)
 
-            f.write("<task_3>\n<get_rooms_largest_age_difference>\n")
-            f.write(str(result3))
-            f.write("\n</get_rooms_largest_age_difference>\n</task_3>")
-
-            f.write("<task_4>\n<get_rooms_with_different_sex_students>\n")
-            f.write(str(result4))
-            f.write("\n</get_rooms_with_different_sex_students>\n</task_4>\n</laba>")
-        print("Данные успешно сохранены в файле output.xml")
+        add_data_to_xml(result1, root, "get_room_student_counts")
+        add_data_to_xml(result2, root, "get_rooms_smallest_avg_age")
+        add_data_to_xml(result3, root, "get_rooms_largest_age_difference")
+        add_data_to_xml(result4, root, "get_rooms_with_different_sex_students")
+        tree = ET.ElementTree(root)
+        tree.write("output.xml", encoding="utf-8", xml_declaration=True)
+        print("Данные успешно сохранены в output.xml")
     elif args.format_output not in ("json", "xml"):
         raise ValueError("Укажите правильный формат: json или xml.")
 
