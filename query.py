@@ -1,6 +1,3 @@
-from database_conn import Database
-
-
 class QueryExecutor:
     def __init__(self, db):
         self.db = db
@@ -58,22 +55,3 @@ class QueryExecutor:
             GROUP BY r.room_id
         """)
         return self.db.fetchall()
-
-
-if __name__ == "__main__":
-    # Этот код выполнится только при прямом запуске файла
-    print("Тестирование класса QueryExecutor")
-
-    db = Database(
-        dbname="postgres",
-        user="postgres",
-        password="root",
-        host="localhost",
-        port="5432",
-    )
-
-    query = QueryExecutor(db)
-    print(query.get_room_student_counts())
-    print(query.get_rooms_smallest_avg_age())
-    print(query.get_rooms_largest_age_difference())
-    print(query.get_rooms_with_different_sex_students())
